@@ -295,5 +295,4 @@ var MineSweeper = Object.create({
 
 $(function() {
     var ms = Object.create(MineSweeper).init();
-    
 }); 
