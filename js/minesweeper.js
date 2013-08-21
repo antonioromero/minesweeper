@@ -174,7 +174,6 @@ var MineSweeper = Object.create({
                 var neighbour = this.findCell('x' + x + ':' + 'y' + y);
                 if (neighbour.mine) {
                     minesClose++;
-                    //cell.minesClose++;
                 }
             }
         }
