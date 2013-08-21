@@ -2,7 +2,6 @@ var Cell = Object.create({
     x: 0,
     y: 0,
     mine: false,
-    minesClose: 0,
     state: 'CLOSED',
     flagged: false,
     td: null,
@@ -12,14 +11,14 @@ var Cell = Object.create({
         this.td.className = '';
         return this.td;
     },
-    open: function() {
+    open: function(neighboursMines) {
         if (this.state === 'CLOSED') {
             this.state = 'OPEN';
             if (this.mine) {
                 this.td.className = (this.td.className === '') ? 'mine' : ' mine';
             } else {
                 this.td.className = (this.td.className === '') ? 'open' : ' open';
-                this.showNumberOfNeigboursMines();
+                this.td.innerHTML = neighboursMines;
             }
         }
     },
@@ -34,10 +33,6 @@ var Cell = Object.create({
             this.flagged = false;
         }
         return this.flagged;
-    },
-    showNumberOfNeigboursMines: function() {
-        this.td.innerHTML = this.minesClose;
-        return;
     }
 });
 
@@ -79,7 +74,6 @@ var MineSweeper = Object.create({
 
         var user = document.createElement("div");
         user.setAttribute('id', 'user-name');
-        //user.innerHTML = '';
 
         var numberOfMines = document.createElement("span");
         numberOfMines.setAttribute('id', 'number-of-mines');
@@ -173,17 +167,18 @@ var MineSweeper = Object.create({
         var upLimit = (cell.y + 1) >= this.height ? this.height : cell.y + 2;
 
         var neighbour;
-        //cell.minesClose = 0;
+        var minesClose = 0;
 
         for (var x = leftLimit; x < rightLimit; x++) {
             for (var y = downLimit; y < upLimit; y++) {
                 var neighbour = this.findCell('x' + x + ':' + 'y' + y);
                 if (neighbour.mine) {
-                    cell.minesClose++;
+                    minesClose++;
+                    //cell.minesClose++;
                 }
             }
         }
-        return cell.minesClose;
+        return minesClose;
     },
     inspect: function(cellId) {
 
@@ -197,7 +192,7 @@ var MineSweeper = Object.create({
 
             if (!cell.mine) {
 
-                cell.open();
+                cell.open(neighboursMines);
 
                 if (neighboursMines === 0) {
                     // Left
